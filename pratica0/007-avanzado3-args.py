@@ -11,7 +11,7 @@ ap.add_argument("-img2", "--imagem_dois", required=True, help="Caminho da segund
 
 args = vars(ap.parse_args())
 
-print(args)
+#print(args)
 
 # se recuperan los parámetros en variables o directamente se utilizan
 # imagen 2 = cv2.imread(args[‘‘imagen color’’])
