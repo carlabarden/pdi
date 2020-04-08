@@ -3,8 +3,6 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-##### ERRO  #######
-'''
 #ler a img
 img = cv.imread("../imgs/chairs.jpg")
 # Las figuras se declaran como en Matlab
@@ -22,4 +20,4 @@ plt.subplot(1,3,3)
 plt.imshow(img)
 plt.show()
 
-'''
+
