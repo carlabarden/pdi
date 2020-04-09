@@ -1,9 +1,7 @@
 '''
 Ejercicio 2: Información de intensidad.
-1. Informe los valores de intensidad de puntos particulares de la imagen (opcio-
-nal: determine la posición en base al click del mouse).
-2. Obtenga y grafique los valores de intensidad (perfil de intensidad ) sobre una
-determinada fila o columna.
+1. Informe los valores de intensidad de puntos particulares de la imagen (opcional: determine la posición en base al click del mouse).
+2. Obtenga y grafique los valores de intensidad (perfil de intensidad ) sobre una determinada fila o columna.
 3. Grafique el perfil de intensidad para un segmento de interés cualquiera.
 '''
 
@@ -17,8 +15,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-img", "--imagem", required=True, help="Caminho da imagem")
 args = vars(ap.parse_args())
 
-# lendo imagens
-img = cv.imread(args["imagem"]);
+# lendo imagens ; 0 p/ ler em escala de cinzas
+img = cv.imread(args["imagem"],0);
 
 #dimensões e tipo de dados
 print("Dimensões: ", img.shape)
