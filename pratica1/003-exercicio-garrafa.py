@@ -148,8 +148,11 @@ def pontos_retangulos(im, garrafas, pto_medio, altura):
 '''
     Desenhar quadro em torno das garrafas.       
 '''
-def moldura (img, pontos, cor):        
-        cv.rectangle(img, pontos[0], pontos[1], (0, 0, 0), 1)
+def moldura (img, pontos, cor):
+    if (cor == 1):        
+        cv.rectangle(img, pontos[0], pontos[1], (0, 255, 0), 1)
+    else:
+        cv.rectangle(img, pontos[0], pontos[1], (0, 0, 255), 1)
         
         
        
@@ -162,6 +165,9 @@ def main():
     [alt, larg] = img.shape
     # linha do centro
     lin_cen = int(alt/2)
+    
+    #img color, para molduras
+    imgc = cv.merge((img,img,img))
 
     garrafas = encontrar_garrafas(img, larg, lin_cen)
     pto_med = ponto_medio(garrafas)
@@ -174,7 +180,10 @@ def main():
     #desenhar
     for x in range(len(pts)):
         coord = pts[x]
-        moldura(img, coord, 1)
+        if (percentual[x] >= 80.00):
+            moldura(imgc, coord, 1)
+        else:
+            moldura(imgc, coord, 0)
         
     #informações
     print("Posições das garrafas: ")
@@ -185,7 +194,7 @@ def main():
     print(" ")
           
     while True:
-        cv.imshow("Garrafas",img)
+        cv.imshow("Garrafas",imgc)
         key = cv.waitKey(1) & 0xFF
         #sair == pressionando q
         if key == ord("q"):
