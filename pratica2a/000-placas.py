@@ -13,111 +13,111 @@ impulsivo (a7v600-x(RImpulsivo).gif y a7v600-SE(RImpulsivo).gif ).
 import cv2 as cv
 import math
 import numpy as np
-# para ler gifs
-import gif2numpy
 from matplotlib import pyplot as plt
+import argparse
 
-#TODO: PASSAR POR ARGUMENTO AO PROG A IMAGEM A SER ANALISADA DA PLACA
+'''
+    Argumentos
+'''
+ap = argparse.ArgumentParser()
+ap.add_argument("-ipx", "--imagem_placa_x",  required=True, help="Imagem Placa A7V600-X")
+ap.add_argument("-ips", "--imagem_placa_se", required=True, help="Imagem Placa A7V600-SE")
+ap.add_argument("-img", "--imagem_analise",  required=True, help="Imagem a ser analisada")
+
+
+'''
+    Ler um gif.
+'''
+def ler_gif(gif):
+    aux = cv.VideoCapture(gif)
+    ret, img = aux.read()
+    return img
+
+
+'''
+    Torna a imagem binária executando a transformação de Limiar.
+'''
+def binarizar(img):
+    ret, img_bin  = cv.threshold(img,50,255,cv.THRESH_BINARY)
+    return img_bin
+
+
+'''
+    Cria uma máscara através da diferença entre duas imagens binárias.
+'''
+def criar_mascara(img1, img2):
+    return img1 - img2
+
+
+'''
+    Aplica a máscara à imagem.
+'''
+def aplicar_mascara(img, mask):
+    img_mask = cv.bitwise_and(mask, img)
+    return img_mask
+
+
+'''
+    Verifica se é ruído, considerando até 1% como sendo ruído (valor empírico)
+e valores maiores como sendo placas distintas.
+'''
+def verificar_ruido(placa):
+    [altura, largura, canais] = placa.shape
+    # Contando os pixeis brancos da imagem binaria
+    n_brancos = np.count_nonzero(placa == 255)
+    # Calculando o percentual que eles representam da imagem
+    percentual = round((n_brancos/(altura*largura)*100),2)
+    if (percentual < 1.00):
+        return True
+    else:
+        return False
+
 
 '''
     Main
 '''
 def main():
+    # args
+    args = vars(ap.parse_args())
 
-    # ler gifs
-    np_frames_x,  ext_x,  img_spec_x  = gif2numpy.convert("../imgs/a7v600-X.gif")
-    np_frames_se, ext_se, img_spec_se = gif2numpy.convert("../imgs/a7v600-SE.gif")
+    # ler imagens
+    img_x  = ler_gif(args["imagem_placa_x"])
+    img_se = ler_gif(args["imagem_placa_se"])
+    # imagem a ser analisada
+    img = ler_gif(args["imagem_analise"])
 
-    #ruido
-    np_frames_x_ruido,  ext_x_ruido,  img_spec_x_ruido  = gif2numpy.convert("../imgs/a7v600-X(RImpulsivo).gif")
-    np_frames_se_ruido, ext_se_ruido, img_spec_se_ruido = gif2numpy.convert("../imgs/a7v600-SE(RImpulsivo).gif")
+    str_x  = "A7V600-X"
+    str_se = "A7V600-SE"
+    veredicto = ""
 
-    # só há um frame na imagem
-    img_x  = np_frames_x[0]
-    img_se = np_frames_se[0]
+    # imagens binárias - limiar
+    bin_x   = binarizar(img_x)
+    bin_se  = binarizar(img_se)
+    bin_img = binarizar(img)
 
-    # ruido
-    x_ruido  = np_frames_x_ruido[0]
-    se_ruido = np_frames_se_ruido[0]
+    # gerar máscaras
+    mask_x  = criar_mascara(bin_se, bin_x)
+    mask_se = criar_mascara(bin_x, bin_se)
 
-    #todas as imagens tem o mesmo tamanho
-    altura = ext_x[0]['height']
-    largura = ext_x[0]['width']
+    # aplicar máscaras
+    img_mask_x  = aplicar_mascara(mask_x,  bin_img)
+    img_mask_se = aplicar_mascara(mask_se, bin_img)
 
-    # limiar, para binarizar imgs
-    ret, bin_x  = cv.threshold(img_x,50,255,cv.THRESH_BINARY)
-    ret, bin_se = cv.threshold(img_se,50,255,cv.THRESH_BINARY)
+    # reconhecer qual placa é -- TRUE: < 1%    FALSE: >=1%
+    if verificar_ruido(img_mask_x):
+        veredicto = str_x
+    elif verificar_ruido(img_mask_se):
+        veredicto = str_se
+    else:
+        veredicto = "Imagem não reconhecida"
 
-    ret, bin_x_ruido  = cv.threshold(x_ruido, 50, 255, cv.THRESH_BINARY)
-    ret, bin_se_ruido = cv.threshold(se_ruido, 50, 255, cv.THRESH_BINARY)
+    print("")
+    print(veredicto)
+    print("")
 
-    # diferença, para criar máscaras
-    mask_x  = bin_se - bin_x
-    mask_se = bin_x  - bin_se
-
-    # teste
-    tst1 = cv.bitwise_and(mask_x,  bin_x)
-    tst2 = cv.bitwise_and(mask_se, bin_x)
-    tst3 = cv.bitwise_and(mask_x,  bin_se)
-    tst4 = cv.bitwise_and(mask_se, bin_se)
-    # ruido
-    tst5 = cv.bitwise_and(mask_x, bin_x_ruido)
-    tst6 = cv.bitwise_and(mask_x, bin_se_ruido)
-    tst7 = cv.bitwise_and(mask_se, bin_x_ruido)
-    tst8 = cv.bitwise_and(mask_se, bin_se_ruido)
-
-    # descobrir porcentagem de limiar
-    c_xr = np.count_nonzero(tst5 == 255)
-    c_ser= np.count_nonzero(tst8 == 255)
-
-    ctst6 = np.count_nonzero(tst6 == 255)
-    ctst7 = np.count_nonzero(tst7 == 255)
-
-    print("non zero x: ", c_xr)
-    print("non zero se: ", c_ser)
-    print("non zero tst6: ", ctst6)
-    print("non zero tst7: ", ctst7)
-    print("percent x ruido: ", round((c_xr/(altura*largura)*100),2))
-    print("percent se ruido: ", round((c_ser/(altura*largura)*100),2))
-    print("tst6: ",  round((ctst6/(altura*largura)*100),2))
-    print("tst7: ",  round((ctst7/(altura*largura)*100),2))
-
-    #mostrar figuras
     plt.figure()
-
-    plt.subplot(2,4,1)
-    plt.imshow(tst1)
-    plt.title("mask_x and bin_x")
-
-    plt.subplot(2,4,2)
-    plt.imshow(tst4)
-    plt.title("mask_se and bin_se")
-
-    plt.subplot(2,4,3)
-    plt.imshow(tst3)
-    plt.title("mask_x and bin_se")
-
-    plt.subplot(2,4,4)
-    plt.imshow(tst2)
-    plt.title("mask_se and bin_x")
-
-    # ruido
-    plt.subplot(2,4,5)
-    plt.imshow(tst5)
-    plt.title("mask_x and bin_x_ruido")
-
-    plt.subplot(2,4,6)
-    plt.imshow(tst6)
-    plt.title("mask_x and bin_se_ruido")
-
-    plt.subplot(2,4,7)
-    plt.imshow(tst7)
-    plt.title("mask_se and bin_x_ruido")
-
-    plt.subplot(2,4,8)
-    plt.imshow(tst8)
-    plt.title("mask_se and bin_se_ruido")
-
+    plt.imshow(img)
+    plt.title(veredicto)
     plt.show()
 
 
