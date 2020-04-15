@@ -90,7 +90,7 @@ def main():
     str_se = "A7V600-SE"
     veredicto = ""
 
-    # imagens binárias - limiar
+    # imagens binárias
     bin_x   = binarizar(img_x)
     bin_se  = binarizar(img_se)
     bin_img = binarizar(img)
@@ -115,6 +115,7 @@ def main():
     print(veredicto)
     print("")
 
+    # mostra imagem e nome da placa
     plt.figure()
     plt.imshow(img)
     plt.title(veredicto)
