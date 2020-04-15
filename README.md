@@ -9,7 +9,7 @@ Repositorio con las prácticas de la disciplina de Procesamiento Digital de Imá
   
   
 ### Entrega II-A:
-[PDF](pratica2/pdi_entrega2_carlabarden.pdf)  |  [SRC](pratica1/000-placas.py)  
+[PDF](pratica2a/pdi_entrega2_carlabarden.pdf)  |  [SRC](pratica2a/000-placas.py)  
 
 
 
