@@ -67,11 +67,11 @@ def main():
     tst8 = cv.bitwise_and(mask_se, bin_se_ruido)
 
     # descobrir porcentagem de limiar
-    c_xr = np.count_nonzero(tst5)
-    c_ser= np.count_nonzero(tst8)
+    c_xr = np.count_nonzero(tst5 == 255)
+    c_ser= np.count_nonzero(tst8 == 255)
 
-    ctst6 = np.count_nonzero(tst6)
-    ctst7 = np.count_nonzero(tst7)
+    ctst6 = np.count_nonzero(tst6 == 255)
+    ctst7 = np.count_nonzero(tst7 == 255)
 
     print("non zero x: ", c_xr)
     print("non zero se: ", c_ser)
