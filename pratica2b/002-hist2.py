@@ -17,6 +17,7 @@ de los histogramas: media, varianza, asimetrı́a, energı́a y entropı́a.
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt 
+from functools import reduce
 
 
 def ler_hist():
@@ -42,7 +43,16 @@ def ler_imgs():
 def calc_hist(img):
     hist = cv.calcHist([img], [0], None, [256], [0, 256])
     return hist
+
+
+def med_hist(hist, img):
+    [altura, largura] = img.shape
+    prob = map(lambda x, y: x * y, hist, range(len(hist)))
+    med = reduce (lambda x, y: x + y, prob) 
+    med *= 1/(altura*largura)
     
+    return med
+
 
 '''
     MAIN
@@ -60,7 +70,9 @@ def main():
     hist4 = calc_hist(img4)
     hist5 = calc_hist(img5)
     
-    
+    m = med_hist(hist1, img1)
+    print(m)
+     
     #mostrar
     #[:,:,::-1] para converter de bgr para rgb
     plt.subplot(3,5,1)
