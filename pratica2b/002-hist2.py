@@ -40,18 +40,52 @@ def ler_imgs():
     return img1, img2, img3, img4, img5
     
 
+'''
+    Cálculo do histograma.
+'''
 def calc_hist(img):
     hist = cv.calcHist([img], [0], None, [256], [0, 256])
     return hist
 
 
-def med_hist(hist, img):
-    [altura, largura] = img.shape
+'''
+    Cálculo da média de luminosidade: med = sum(g * P(g)) = 1/MN*(sum(f(x,y)))
+Descreve o brilho médio de uma imagem.
+'''
+def med_hist(hist, tam_img):
     prob = map(lambda x, y: x * y, hist, range(len(hist)))
     med = reduce (lambda x, y: x + y, prob) 
-    med *= 1/(altura*largura)
+    med *= 1/(tam_img)
     
     return med
+
+'''
+    Cálculo da Variância: var = sum(x - med)^2 * P(x) = 1/MN*(sum(f(x,y) - med)))
+Descreve o contraste de uma imagem. 
+'''
+def variancia(med):
+    pass
+
+
+'''
+    Cálculo da Assimetria: a = sum(x - med)^3 * P(x).
+'''
+def assimetria(hist, med):
+    pass
+
+
+'''
+    Cálculo da Energia: E = sum(P(x)^2)
+'''
+def energia(hist):
+    pass
+
+
+'''
+    Cálculo da Entropia: - sum(P(x) * log_base2[P(x)]
+'''
+def entropia(hist):
+    pass
 
 
 '''
@@ -70,7 +104,7 @@ def main():
     hist4 = calc_hist(img4)
     hist5 = calc_hist(img5)
     
-    m = med_hist(hist1, img1)
+    m = med_hist(hist1, img1.shape[0] * img1.shape[1])
     print(m)
      
     #mostrar
