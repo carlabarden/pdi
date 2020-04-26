@@ -13,7 +13,7 @@ con sus respuestas del punto anterior.
 de los histogramas: media, varianza, asimetrı́a, energı́a y entropı́a.
 '''
 
-#import math
+import math
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt 
@@ -52,40 +52,63 @@ def calc_hist(img):
     Cálculo da média de luminosidade: med = sum(g * P(g)) = 1/MN*(sum(f(x,y)))
 Descreve o brilho médio de uma imagem.
 '''
-def med_hist(hist, tam_img):
-    prob = map(lambda x, y: x * y, hist, range(len(hist)))
-    med = reduce (lambda x, y: x + y, prob) 
-    med *= 1/(tam_img)
-    
+def med_hist(img):
+    med = np.mean(img)
     return med
 
 '''
     Cálculo da Variância: var = sum(x - med)^2 * P(x) = 1/MN*(sum(f(x,y) - med)))
 Descreve o contraste de uma imagem. 
 '''
-def variancia(med):
-    pass
+def variancia(img):
+    var = np.var(img)
+    return var
 
 
 '''
     Cálculo da Assimetria: a = sum(x - med)^3 * P(x).
+Se > 0, cauda direita --  +valores acima da média
+Se < 0, cauda esquerda -- +valores abaixo da média
 '''
-def assimetria(hist, med):
-    pass
+def assimetria(img):
+    hist = calc_hist(img)
+    med = med_hist(img)
+    assimetria = 0
+    for x in range(len(hist)):
+        assimetria += ((x - med) ** 3) * hist[x]
+
+    return assimetria
 
 
 '''
-    Cálculo da Energia: E = sum(P(x)^2)
+    Cálculo da Energia: E = sum(P(x)^2) 
+Valor máximo de 1 para imagem com um único nível de cinza, diminui conforme
+aumenta o número de níveis de cinza.
 '''
-def energia(hist):
-    pass
+def energia(img):
+    hist = calc_hist(img)
+    med = med_hist(img)
+    energia = 0
+    for x in range(len(hist)):
+        energia += hist[x] ** 2
+    
+    return energia
 
 
 '''
     Cálculo da Entropia: - sum(P(x) * log_base2[P(x)]
+Inverso da Energia. Aumenta conforme o número de cinzas da imagem.
 '''
-def entropia(hist):
-    pass
+def entropia(img):
+    hist = calc_hist(img)
+    entropia = 0
+    for x in range(len(hist)):
+        if hist[x] > 0:
+            entropia += hist[x] * math.log2(hist[x])
+   
+    entropia =  entropia * -1
+    
+    return entropia
 
 
 '''
@@ -104,7 +127,7 @@ def main():
     hist4 = calc_hist(img4)
     hist5 = calc_hist(img5)
     
-    m = med_hist(hist1, img1.shape[0] * img1.shape[1])
+    m = entropia(img1)
     print(m)
      
     #mostrar
