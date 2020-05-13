@@ -15,3 +15,7 @@ Repositorio con las prácticas de la disciplina de Procesamiento Digital de Imá
 
 ### Entrega III:
 [PDF](pratica4/pdi_entrega3_carlabarden.pdf)  |  [SRC](pratica4/000-desmatamento.py)  
+
+
+### Entrega IV:
+[PDF](pratica5/pdi_entrega4_carlabarden.pdf)  |  [SRC](pratica5/000-ocr.py)  
