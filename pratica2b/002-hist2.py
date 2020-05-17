@@ -127,9 +127,29 @@ def main():
     hist4 = calc_hist(img4)
     hist5 = calc_hist(img5)
     
-    m = entropia(img1)
-    print(m)
+    #media, variancia, assimetria, energia e entropia
+    
+    print("Média")
+    print(med_hist(img1), med_hist(img2), med_hist(img3),\
+          med_hist(img4), med_hist(img5))
+
+    print("Variância")
+    print(variancia(img1), variancia(img2), variancia(img3),\
+          variancia(img4), variancia(img5))
      
+    print("Assimetria")
+    print(assimetria(img1), assimetria(img2), assimetria(img3),\
+          assimetria(img4), assimetria(img5))
+
+    print("Energia")
+    print(energia(img1), energia(img2), energia(img3),\
+          energia(img4), energia(img5))
+
+    print("Entropia")
+    print(entropia(img1), entropia(img2), entropia(img3),\
+          entropia(img4), entropia(img5))
+
+
     #mostrar
     #[:,:,::-1] para converter de bgr para rgb
     plt.subplot(3,5,1)
@@ -163,21 +183,30 @@ def main():
     plt.imshow(img5, cmap="gray")
     
     #histogramas calculados
-    #valores discretos, gráfico contínuo
     plt.subplot(3,5,11)
-    plt.plot(hist1)
+    for x in range(256):
+        plt.vlines(x=x, ymin=0, ymax=hist1[x], colors="c")
+    plt.grid()
     
     plt.subplot(3,5,12)
-    plt.plot(hist2)
+    for x in range(256):
+        plt.vlines(x=x, ymin=0, ymax=hist2[x], colors="c")
+    plt.grid()
     
     plt.subplot(3,5,13)
-    plt.plot(hist3)
+    for x in range(256):
+        plt.vlines(x=x, ymin=0, ymax=hist3[x], colors="c")
+    plt.grid()
     
     plt.subplot(3,5,14)
-    plt.plot(hist4)
+    for x in range(256):
+        plt.vlines(x=x, ymin=0, ymax=hist4[x], colors="c")
+    plt.grid()
     
     plt.subplot(3,5,15)
-    plt.plot(hist5)
+    for x in range(256):
+        plt.vlines(x=x, ymin=0, ymax=hist5[x], colors="c")
+    plt.grid()
      
     plt.show()      
     
