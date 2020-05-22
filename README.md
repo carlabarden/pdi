@@ -19,3 +19,7 @@ Repositorio con las prácticas de la disciplina de Procesamiento Digital de Imá
 
 ### Entrega IV:
 [PDF](pratica5/pdi_entrega4_carlabarden.pdf)  |  [SRC](pratica5/000-ocr.py)  
+
+
+### Entrega V:
+[PDF](pratica6/pdi_entrega5_carlabarden.pdf)  |  [SRC](pratica6/000-familia.py)  
